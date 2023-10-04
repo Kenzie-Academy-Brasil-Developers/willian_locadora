@@ -1,4 +1,4 @@
-create table "movis" (
+create table "movies" (
 "id" SERIAL PRIMARY KEY,
 "name" VARCHAR(50) NOT NULL,
 "category" VARCHAR(20) NOT NULL,

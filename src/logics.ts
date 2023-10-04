@@ -6,7 +6,7 @@ import format from "pg-format";
 const create = async (req: Request, res: Response): Promise<Response> => {
     const queryTemplate: string = format(
      `
-    INSERT INTO "movis" (%I)
+    INSERT INTO "movies" (%I)
     VALUES
     (%L)
     RETURNING *;
@@ -25,24 +25,24 @@ const create = async (req: Request, res: Response): Promise<Response> => {
 
 const read = async (req: Request, res: Response): Promise<Response> => {
     const queryCategory: string = `
-    SELECT * FROM "movis" WHERE "category" = $1; `;
+    SELECT * FROM "movies" WHERE "category" = $1; `;
     const queryResultCategory: QueryResult = await client.query(queryCategory,
         [req.query.category]);
 
     if(queryResultCategory.rowCount > 0) {
         return res.status(200).json(queryResultCategory.rows);
     }
-    const queryResult: QueryResult = await client.query('SELECT * FROM "movis";')
+    const queryResult: QueryResult = await client.query('SELECT * FROM "movies";')
     return res.status(200).json(queryResult.rows);
 };
 
 const retrieve = async (req: Request, res: Response): Promise<Response> => {
-   return res.status(200).json(res.locals.foundMovis);
+   return res.status(200).json(res.locals.foundMovies);
 };
 
 const partialUpdate = async (req: Request, res: Response): Promise<Response> => {
     const queryFormat: string = format(
-        'UPDATE "movis" SET (%I) = ROW(%L) WHERE "id" = %L RETURNING *;',
+        'UPDATE "movies" SET (%I) = ROW(%L) WHERE "id" = %L RETURNING *;',
         Object.keys(req.body),
         Object.values(req.body),
         req.params.id
@@ -55,7 +55,7 @@ const partialUpdate = async (req: Request, res: Response): Promise<Response> => 
 
 const destroy = async (req: Request, res: Response): Promise<Response> => {
      await client.query(
-        'DELETE FROM "movis" WHERE "id" = $1;',
+        'DELETE FROM "movies" WHERE "id" = $1;',
         [req.params.id]
     )
     return res.status(204).json()
